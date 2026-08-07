@@ -1,0 +1,68 @@
+#define BLYNK_TEMPLATE_ID   "TMPL3LvNQJAGE"
+#define BLYNK_TEMPLATE_NAME "SmartBin"
+#define BLYNK_AUTH_TOKEN    "3Qsw7VqnMGUbOJbYLbQTm-YHN6Xe0gP6"
+#include <WiFi.h>
+#include <BlynkSimpleEsp32.h>
+#include <ESP32Servo.h>
+// ---------- WiFi credentials ----------
+char ssid[] = "Jay";
+char pass[] = "MSP@1978";
+// ---------- Pin definitions ----------
+#define TRIG_PIN  5
+#define ECHO_PIN  18
+#define SERVO_PIN 13
+Servo lidServo;
+bool lidOpen = false;
+BlynkTimer timer;
+void sendSensor()
+{
+  long duration;
+  float distance;
+  // Trigger the ultrasonic sensor
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  duration = pulseIn(ECHO_PIN, HIGH);
+  distance = duration * 0.0343 / 2;
+  Serial.print("Distance : ");
+  Serial.println(distance);
+  if (distance <= 20 && distance > 0)
+  {
+    lidServo.write(90);
+    lidOpen = true;
+    Blynk.virtualWrite(V1, "OPEN");
+  }
+  else
+  {
+    lidServo.write(0);
+    lidOpen = false;
+    Blynk.virtualWrite(V1, "CLOSED");
+  }
+  // Send distance reading to the Blynk Gauge widget
+  Blynk.virtualWrite(V0, distance);
+}
+void setup()
+{
+  Serial.begin(115200);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  lidServo.setPeriodHertz(50);
+  lidServo.attach(SERVO_PIN, 500, 2400);
+  lidServo.write(0);
+  WiFi.begin(ssid, pass);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("WiFi Connected");
+  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+  timer.setInterval(1000L, sendSensor);
+}
+void loop()
+{
+  Blynk.run();
+  timer.run();
+}
