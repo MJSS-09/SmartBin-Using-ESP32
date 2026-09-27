@@ -52,11 +52,11 @@ The goal was a low-cost, contactless, internet-connected dustbin that removes th
 
 Full project report (architecture, wiring diagrams, code walkthrough): see `SmartBin.docx` in this repo.
 
-## ✍🏼Author
+## 👨‍💻 Author
 
-M. Jayantha Siva Srinivas | B.Tech (ECE), Seshadri Rao Gudlavalleru Engineering College
-
-Contributors: P. Joshi, P.M. Shoaib Khan, Sk. Imran, G. Jayaraju,G. IndraNag
+**Mallampally Jayantha Siva Srinivas** | **B.Tech | Electronics and Communication Engineering (ECE)**
+ESSCI-Certified Embedded Fullstack & IoT Analyst , SRM University(AP)
+---
 
 
 
